@@ -1,0 +1,58 @@
+extends layout
+
+block content
+  div(ng-controller="bstatsController").bstatsMaster
+    h2.soft-grey= title
+    table
+      tr
+        td Sybase username:
+        td
+          input(ng-model="credentials.sybase_username", id="username")
+      tr
+        td Password:
+        td
+          input(ng-model="credentials.sybase_password", id="password", type="password")
+      tr
+        td Environment:
+        td
+            select(ng-model="sybase_env", id="sybenv", class="{{sybase_env}}")
+                option(value="PRD").prd Production
+                option(value="UAT").uat UAT
+                option(value="DEV").dev Development
+      tr
+        td History goes back (days):
+        td
+            select(ng-model="days_ago", id="daysAgo")
+                option(value="1") 1
+                option(value="7") 7
+                option(value="14") 14
+                option(value="30") 30
+      tr
+        td
+      tr
+        td
+          button(ng-click="getStats()") REFRESH
+    br
+
+    table.job-table
+      th.job-table-cell.job-table-header
+        t MARS Operation
+      th(colspan="10",
+        title="Green means run was quicker/same as previous, red=slower.", data-toggle="tooltip").job-table-cell.job-table-header
+        t Run time (secs). Most recent run to the left.
+      tr(ng-repeat="job in stats")
+          td(ng-click="showStats(job['op']);", class="job-table-cell", class="clickableJob") {{ job["op"] }}
+          td(ng-repeat="run in job.revruns track by $index",
+            title="Started: {{ run.start }}", data-toggle="tooltip",
+            class="job-table-cell", class="{{ run.trend }}") {{ run.elapsed }}
+    br
+    br
+
+    div(id="hive-path")
+    div(id="TheGraph")
+    div(id="graph")
+    div(ng-show="busy").busy
+    div(ng-show="busy").busy-message
+      t Contacting Sybase ({{ sybase_env }})
+      br
+      t Please wait...

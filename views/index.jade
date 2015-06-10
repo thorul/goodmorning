@@ -1,0 +1,122 @@
+extends layout
+
+block content
+  div(ng-controller="mcController").master
+    h2.soft-grey= title
+    table
+      tr
+        td Cronacle username:
+        td
+          input(ng-model="credentials.cronacle_username", id="username")
+      tr
+        td Password:
+        td
+          input(ng-model="credentials.cronacle_password", id="password", type="password")
+      tr
+        td Environment:
+        td
+            select(ng-model="cronacle_env", id="cronenv", class="{{cronacle_env}}")
+                option(value="PRD").prd Production
+                option(value="UAT").uat UAT
+                option(value="DEV").dev Development
+      tr
+        td History goes back (days):
+        td
+            select(ng-model="days_ago", id="daysAgo")
+                option(value="1") 1
+                option(value="2") 2
+                option(value="3") 3
+                option(value="4") 4
+                option(value="5") 5
+                option(value="6") 6
+      tr
+        td Yesterday was a bank holiday:
+        td
+            input(ng-model="afterBankHoliday", type="checkbox", id="afterBankHoliday")
+      tr
+        td
+      tr
+        td
+          button(ng-click="getStatus()") REFRESH
+    br
+
+    table.job-table
+      th.job-table-cell.job-table-header
+        t Severity
+      th.job-table-cell.job-table-header
+        t Status Message
+      tr(ng-repeat="msg in analysis")
+          td(class="{{ msg['sev'] }}", class="job-table-cell") {{ msg["sev"] }}
+          td(class="{{ msg['sev'] }}", class="job-table-cell") {{ msg["msg"] }}
+
+    br
+    table.job-table
+      th.job-table-cell.job-table-header
+        t MARS Job name
+      th.job-table-cell.job-table-header
+        t Script name
+      th.job-table-cell.job-table-header
+        t Status
+      th.job-table-cell.job-table-header
+        t Actual Start
+      th.job-table-cell.job-table-header
+        t Actual End
+      th.job-table-cell.job-table-header
+        t Elapsed Minutes
+      th.job-table-cell.job-table-header
+        t Expected Start
+      th.job-table-cell.job-table-header
+        t Avg Run Time
+      th.job-table-cell.job-table-header
+        t Next Start Due
+      tr(ng-repeat="job in crjobs['mars-batch']")
+          td(ng-click="showStats(job['jobName']);", class="{{ job['jobStatus'] }}", class="job-table-cell", class="clickableJob") {{ job["jobName"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["scriptName"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobStatus"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobStart"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobEnd"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobElapsed"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobExpectedStart"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobAvgRuntimeMins"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobNextStartDue"] }}
+
+    br
+    br
+
+    table.job-table
+      th.job-table-cell.job-table-header
+        t Sundry Job name
+      th.job-table-cell.job-table-header
+        t Script name
+      th.job-table-cell.job-table-header
+        t Status
+      th.job-table-cell.job-table-header
+        t Actual Start
+      th.job-table-cell.job-table-header
+        t Actual End
+      th.job-table-cell.job-table-header
+        t Elapsed Minutes
+      th.job-table-cell.job-table-header
+        t Expected Start
+      th.job-table-cell.job-table-header
+        t Avg Run Time
+      th.job-table-cell.job-table-header
+        t Next Start Due
+      tr(ng-repeat="job in crjobs['sundry-jobs']")
+          td(ng-click="showStats(job['jobName']);", class="{{ job['jobStatus'] }}", class="job-table-cell", class="clickableJob") {{ job["jobName"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["scriptName"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobStatus"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobStart"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobEnd"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobElapsed"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobExpectedStart"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobAvgRuntimeMins"] }}
+          td(class="{{ job['jobStatus'] }}", class="job-table-cell") {{ job["jobNextStartDue"] }}
+    div(id="hive-path")
+    div(id="TheGraph")
+    div(id="graph")
+    div(ng-show="busy").busy
+    div(ng-show="busy").busy-message
+      t Contacting Cronacle
+      br
+      t Please wait...

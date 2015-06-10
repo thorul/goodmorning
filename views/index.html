@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html ng-app="mcapp">
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"><!-- Load the jQuery UI CSS -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/ui-darkness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-cookies.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="javascripts/mc-service.js"></script>
+    <script src="javascripts/mc-controller.js"></script>
+    <script src="javascripts/curve-controller.js"></script>
+    <script src="javascripts/bstats-controller.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" charset="UTF-8"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js" charset="UTF-8"></script>
+    <script src="http://d3js.org/d3.v3.min.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://www.google.com/jsapi" type="text/javascript" charset="UTF-8"></script>
+    <body class="black"></body>
+    <div ng-controller="mcController" class="master">
+      <h2 class="soft-grey"></h2>
+      <table>
+        <tr>
+          <td>Cronacle username:</td>
+          <td>
+            <input ng-model="credentials.cronacle_username" id="username">
+          </td>
+        </tr>
+        <tr>
+          <td>Password:</td>
+          <td>
+            <input ng-model="credentials.cronacle_password" id="password" type="password">
+          </td>
+        </tr>
+        <tr>
+          <td>Environment:</td>
+          <td>
+            <select ng-model="cronacle_env" id="cronenv" class="{{cronacle_env}}">
+              <option value="PRD" class="prd">Production</option>
+              <option value="UAT" class="uat">UAT</option>
+              <option value="DEV" class="dev">Development</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>History goes back (days):</td>
+          <td>
+            <select ng-model="days_ago" id="daysAgo">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Yesterday was a bank holiday:</td>
+          <td>
+            <input ng-model="afterBankHoliday" type="checkbox" id="afterBankHoliday">
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            <button ng-click="getStatus()">REFRESH</button>
+          </td>
+        </tr>
+      </table><br>
+      <table class="job-table">
+        <th class="job-table-cell job-table-header">
+          <t>Severity</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Status Message</t>
+        </th>
+        <tr ng-repeat="msg in analysis">
+          <td class="{{ msg['sev'] }} job-table-cell">{{ msg["sev"] }}</td>
+          <td class="{{ msg['sev'] }} job-table-cell">{{ msg["msg"] }}</td>
+        </tr>
+      </table><br>
+      <table class="job-table">
+        <th class="job-table-cell job-table-header">
+          <t>MARS Job name</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Script name</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Status</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Actual Start</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Actual End</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Elapsed Minutes</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Expected Start</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Avg Run Time</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Next Start Due</t>
+        </th>
+        <tr ng-repeat="job in crjobs['mars-batch']">
+          <td ng-click="showStats(job['jobName']);" class="{{ job['jobStatus'] }} job-table-cell clickableJob">{{ job["jobName"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["scriptName"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobStatus"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobStart"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobEnd"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobElapsed"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobExpectedStart"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobAvgRuntimeMins"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobNextStartDue"] }}</td>
+        </tr>
+      </table><br><br>
+      <table class="job-table">
+        <th class="job-table-cell job-table-header">
+          <t>Sundry Job name</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Script name</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Status</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Actual Start</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Actual End</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Elapsed Minutes</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Expected Start</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Avg Run Time</t>
+        </th>
+        <th class="job-table-cell job-table-header">
+          <t>Next Start Due</t>
+        </th>
+        <tr ng-repeat="job in crjobs['sundry-jobs']">
+          <td ng-click="showStats(job['jobName']);" class="{{ job['jobStatus'] }} job-table-cell clickableJob">{{ job["jobName"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["scriptName"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobStatus"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobStart"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobEnd"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobElapsed"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobExpectedStart"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobAvgRuntimeMins"] }}</td>
+          <td class="{{ job['jobStatus'] }} job-table-cell">{{ job["jobNextStartDue"] }}</td>
+        </tr>
+      </table>
+      <div id="hive-path"></div>
+      <div id="TheGraph"></div>
+      <div id="graph"></div>
+      <div ng-show="busy" class="busy"></div>
+      <div ng-show="busy" class="busy-message">
+        <t>Contacting Cronacle</t><br>
+        <t>Please wait...</t>
+      </div>
+    </div>
+  </head>
+</html>

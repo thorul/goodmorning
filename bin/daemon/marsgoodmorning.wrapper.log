@@ -1,0 +1,7 @@
+2015-06-03 09:12:32 - Starting C:\Program Files\nodejs\node.exe --harmony "C:\apps\projects\goodmorning\node_modules\node-windows\lib\wrapper.js" -f "C:\apps\projects\goodmorning\bin\www" -l "MARS-GoodMorning" -g 0.25 -w 1 -r 3 -a n
+2015-06-03 09:12:32 - Started 11228
+2015-06-06 22:41:16 - Stopping marsgoodmorning.exe
+2015-06-06 22:41:16 - ProcessKill 11228
+2015-06-06 22:41:16 - Finished marsgoodmorning.exe
+2015-06-06 22:42:27 - Starting C:\Program Files\nodejs\node.exe --harmony "C:\apps\projects\goodmorning\node_modules\node-windows\lib\wrapper.js" -f "C:\apps\projects\goodmorning\bin\www" -l "MARS-GoodMorning" -g 0.25 -w 1 -r 3 -a n
+2015-06-06 22:42:27 - Started 2644

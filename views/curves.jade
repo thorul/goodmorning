@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  div(ng-controller="curveController").curveMaster
+    h2.soft-grey= title
+    table
+      tr
+        td
+          button(ng-click="getCurves()") DEV1 Hierarchy
+      tr
+        td
+          t
+      tr
+        td
+          button(ng-click="showCustomSubTree()", data-toggle="tooltip", title="Generates curves using output from ListCurveDepends") VISUALISE =>
+        td
+          textarea(ng-model="curveJson", rows="5", cols="120", data-toggle="tooltip", title="Paste output from ListCurveDepends here.")
+      tr
+        td
+          button(ng-click="showCustomGraph()", data-toggle="tooltip", title="Generates curves using output from ListCurveDepends") GRAPH =>
+    br
+
+    div(id="hive-path").curves
+    div(id="TheGraph")
+    div(id="graph")
+    div(ng-show="busy").busy
+    div(ng-show="busy").busy-message
+      t Contacting Sybase
+      br
+      t Please wait...

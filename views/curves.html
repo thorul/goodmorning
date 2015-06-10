@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="mcapp">
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css"><!-- Load the jQuery UI CSS -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/ui-darkness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-cookies.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="javascripts/mc-service.js"></script>
+    <script src="javascripts/mc-controller.js"></script>
+    <script src="javascripts/curve-controller.js"></script>
+    <script src="javascripts/bstats-controller.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" charset="UTF-8"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js" charset="UTF-8"></script>
+    <script src="http://d3js.org/d3.v3.min.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="https://www.google.com/jsapi" type="text/javascript" charset="UTF-8"></script>
+    <body class="black"></body>
+    <div ng-controller="curveController" class="curveMaster">
+      <h2 class="soft-grey"></h2>
+      <table>
+        <tr>
+          <td>
+            <button ng-click="getCurves()">DEV1 Hierarchy</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <t></t>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button ng-click="showCustomSubTree()" data-toggle="tooltip" title="Generates curves using output from ListCurveDepends">VISUALISE =></button>
+          </td>
+          <td>
+            <textarea ng-model="curveJson" rows="5" cols="120" data-toggle="tooltip" title="Paste output from ListCurveDepends here."></textarea>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button ng-click="showCustomGraph()" data-toggle="tooltip" title="Generates curves using output from ListCurveDepends">GRAPH =></button>
+          </td>
+        </tr>
+      </table><br>
+      <div id="hive-path" class="curves"></div>
+      <div id="TheGraph"></div>
+      <div id="graph"></div>
+      <div ng-show="busy" class="busy"></div>
+      <div ng-show="busy" class="busy-message">
+        <t>Contacting Sybase</t><br>
+        <t>Please wait...</t>
+      </div>
+    </div>
+  </head>
+</html>
